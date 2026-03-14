@@ -1,7 +1,49 @@
 {
+  "model": "sonnet",
   "permissions": {
     "defaultMode": "bypassPermissions"
   },
-  "model": "sonnet",
-  "skipDangerousModePermissionPrompt": true
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash /Users/luma2/projects/agent-orchestration/scripts/auto-stage.sh \"$TOOL_INPUT\""
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash /Users/luma2/projects/agent-orchestration/scripts/guard.sh \"$TOOL_INPUT\""
+          }
+        ]
+      },
+      {
+        "matcher": "WebSearch",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'RULE VIOLATION: WebSearch is blocked. Delegate research to Gemini instead: bash ~/projects/agent-orchestration/scripts/orchestrate.sh gemini \"<query>\" <task-name>' >&2 && exit 2"
+          }
+        ]
+      }
+    ]
+  },
+  "skipDangerousModePermissionPrompt": true,
+  "effortLevel": "medium",
+  "mcpServers": {
+    "notion-personal": {
+      "command": "/PATH/TO/.claude/notion-personal-mcp.sh"
+    },
+    "notion-company": {
+      "command": "/PATH/TO/.claude/notion-company-mcp.sh"
+    }
+  }
 }

@@ -36,7 +36,14 @@
    - 분량은 짧게. 억지로 채우지 말고, 없는 항목은 생략해라.
    - 이 파일은 "AI는 회계사를 대체할 수 있을까" 책의 날것 원고 재료다.
 
-5. **Git commit & push (전체 레포 스캔)**
+5. **Agent 설정 동기화**
+   - 스크립트·설정 변경사항을 모든 에이전트(Claude/Codex/Gemini)에 배포해라:
+     ```bash
+     bash ~/projects/agent-orchestration/scripts/sync.sh
+     ```
+   - 완료 메시지 확인 후 다음 단계로.
+
+6. **Git commit & push (전체 레포 스캔)**
    - `~/projects/` 아래 모든 git 레포를 순회하며 변경사항이 있는 것만 커밋·푸시해라.
    - 커밋 메시지 형식:
      ```
@@ -48,6 +55,7 @@
      for repo in ~/projects/*/; do
        if [ -d "$repo/.git" ] && ! git -C "$repo" diff --quiet HEAD 2>/dev/null || git -C "$repo" status --porcelain | grep -q .; then
          echo "커밋: $repo"
+         git -C "$repo" pull --rebase origin master 2>/dev/null || git -C "$repo" pull --rebase origin main 2>/dev/null || true
          git -C "$repo" add -A
          git -C "$repo" commit -m "session: [날짜] [요약]"
          git -C "$repo" push
@@ -57,4 +65,4 @@
    - 레포별로 변경 내용이 다르면 커밋 메시지를 각각 맞게 조정해라.
    - 변경사항 없는 레포는 건너뛰어라.
 
-6. 완료 메시지 출력: "세션 마무리 완료. 다음 세션 시작 시 session.md를 먼저 읽어라."
+7. 완료 메시지 출력: "세션 마무리 완료. 다음 세션 시작 시 session.md를 먼저 읽어라."
