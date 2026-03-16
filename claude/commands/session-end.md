@@ -4,12 +4,18 @@
 (Mac mini 등 다른 경로를 쓰는 기기는 `~/projects/agent-orchestration`으로 재클론 필요)
 
 1. **오늘 daily 로그 업데이트**
+   - 먼저 `hostname` 명령으로 현재 기기명을 확인해라. 기기명을 아래 규칙으로 레이블로 변환해라:
+     - `luma2` 포함 → `Mac Air`
+     - `mini` 포함 → `Mac mini`
+     - `luma3` 또는 `m4` 포함 → `M4`
+     - Windows(PowerShell) → `Windows`
+     - 그 외 → hostname 그대로 사용
    - `~/projects/agent-orchestration/daily/[오늘날짜].md` 파일을 열어라.
    - 파일이 없으면 `~/projects/agent-orchestration/daily/TEMPLATE.md`를 참고해서 새로 만들어라.
    - 파일 맨 아래에 새 섹션을 추가해라 (기존 내용 수정 금지):
 
 ```
-### 이번 세션에서 한 일
+### 이번 세션에서 한 일 ([기기 레이블])
 - (한 일 요약)
 
 **블로커**
@@ -31,7 +37,7 @@
    - 맨 위에 아래 형식으로 이번 세션 요약을 추가해라 (이전 내용은 유지):
 
 ```
-## [날짜 시간]
+## [날짜 시간] ([기기 레이블])
 **한 일**: (3줄 이내)
 **진행 중**: (다음 세션에 이어할 것)
 **주요 결정**: (있으면)
