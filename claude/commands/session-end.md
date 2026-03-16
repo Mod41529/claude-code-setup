@@ -1,16 +1,33 @@
 세션을 마무리한다. 다음 단계를 순서대로 실행해라.
 
+**경로 기준**: 모든 기기에서 `~/projects/agent-orchestration` 을 사용한다.
+(Mac mini 등 다른 경로를 쓰는 기기는 `~/projects/agent-orchestration`으로 재클론 필요)
+
 1. **오늘 daily 로그 업데이트**
-   - ~/projects/agent-orchestration/daily/[오늘날짜].md 파일을 열어라.
-   - 파일이 없으면 TEMPLATE.md를 참고해서 새로 만들어라.
-   - ## 메모 섹션에 이번 세션에서 한 일, 블로커, 다음 세션에 이어할 것을 간략히 기록해라.
+   - `~/projects/agent-orchestration/daily/[오늘날짜].md` 파일을 열어라.
+   - 파일이 없으면 `~/projects/agent-orchestration/daily/TEMPLATE.md`를 참고해서 새로 만들어라.
+   - 파일 맨 아래에 새 섹션을 추가해라 (기존 내용 수정 금지):
+
+```
+### 이번 세션에서 한 일
+- (한 일 요약)
+
+**블로커**
+- (있으면)
+
+**다음 세션에 이어할 것**
+- (이어할 것)
+
+---
+```
 
 2. **SCHEDULE.md 동기화**
-   - 이번 세션에서 완료된 항목이 있으면 [x]로 체크해라.
+   - `~/projects/agent-orchestration/SCHEDULE.md`를 읽어라.
+   - 이번 세션에서 완료된 항목이 있으면 `[x]`로 체크해라.
    - 이번 세션에서 새로 발생한 할 일이 있으면 적절한 섹션에 추가해라.
 
 3. **session.md 업데이트**
-   - ~/projects/agent-orchestration/session.md 파일을 열어라 (없으면 생성).
+   - `~/projects/agent-orchestration/session.md` 파일을 열어라 (없으면 생성).
    - 맨 위에 아래 형식으로 이번 세션 요약을 추가해라 (이전 내용은 유지):
 
 ```
@@ -22,8 +39,8 @@
 ```
 
 4. **book-journal.md 업데이트**
-   - ~/projects/agent-orchestration/book-journal.md 파일을 열어라 (없으면 생성).
-   - 이번 세션에서 일어난 일을 바탕으로 아래 3가지를 간결하게 채워 맨 위에 추가해라:
+   - `~/projects/agent-orchestration/book-journal.md` 파일을 열어라 (없으면 생성).
+   - 이번 세션에서 일어난 일을 바탕으로 아래 형식으로 맨 위에 추가해라 (이전 내용은 유지):
 
 ```
 ## [날짜 시간]
@@ -41,21 +58,17 @@
      ```bash
      bash ~/projects/agent-orchestration/scripts/sync.sh
      ```
-   - 완료 메시지 확인 후 다음 단계로.
+   - 실패하면 "sync.sh 실패: [에러 메시지]"를 출력하고 다음 단계로 넘어가라. 중단하지 마라.
 
 6. **Git commit & push (전체 레포 스캔)**
    - `~/projects/` 아래 모든 git 레포를 순회하며 변경사항이 있는 것만 커밋·푸시해라.
-   - 커밋 메시지 형식:
-     ```
-     session: [날짜] [한 일 핵심 1줄]
-     ```
+   - 커밋 메시지 형식: `session: [날짜] [한 일 핵심 1줄]`
      예: `session: 2026-03-13 ICP 확정, book-journal 시스템 구축`
    - 실행 방법:
      ```bash
      for repo in ~/projects/*/; do
-       if [ -d "$repo/.git" ] && ! git -C "$repo" diff --quiet HEAD 2>/dev/null || git -C "$repo" status --porcelain | grep -q .; then
+       if [ -d "$repo/.git" ] && { ! git -C "$repo" diff --quiet HEAD 2>/dev/null || git -C "$repo" status --porcelain 2>/dev/null | grep -q .; }; then
          echo "커밋: $repo"
-         git -C "$repo" pull --rebase origin master 2>/dev/null || git -C "$repo" pull --rebase origin main 2>/dev/null || true
          git -C "$repo" add -A
          git -C "$repo" commit -m "session: [날짜] [요약]"
          git -C "$repo" push
