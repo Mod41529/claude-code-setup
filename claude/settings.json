@@ -62,6 +62,9 @@
       }
     ]
   },
+  "effortLevel": "medium",
   "skipDangerousModePermissionPrompt": true,
-  "effortLevel": "medium"
+  "enabledPlugins": {
+    "telegram@claude-plugins-official": true
+  }
 }
